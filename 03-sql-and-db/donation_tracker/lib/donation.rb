@@ -1,3 +1,5 @@
+require 'pry'
+require_relative "../config/environment.rb"
 class Donation
 
     attr_accessor :amount, :date, :organization_id 
@@ -5,7 +7,6 @@ class Donation
 
     def initialize(attributes) 
         attributes.each do |key, value| 
-            binding.pry
             if self.respond_to?("#{key.to_s}=") 
                 self.send("#{key.to_s}=", value) 
             end 
@@ -22,7 +23,7 @@ class Donation
             SQL
 
             DB.execute(sql, self.amount, self.date, self.organization_id)
-            @id = DB.last_insert_row_id
+            @id = DB.last_insert_row_id # returns is the id of the last added record
         end 
         self 
     end
@@ -39,7 +40,6 @@ class Donation
     def self.all 
         array_of_hashes = DB.execute("SELECT * FROM donations")
         array_of_hashes.map do |hash|
-            binding.pry
           self.new(hash)
         end
     end
@@ -57,3 +57,6 @@ class Donation
     end 
 
 end 
+binding.pry
+# donation = Donation.new(amount: 100, date: 112322)
+# donation.save
